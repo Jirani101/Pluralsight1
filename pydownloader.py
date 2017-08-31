@@ -13,7 +13,8 @@ class Downloader(QDialog):
         self.url = QLineEdit()
         self.save_location = QLineEdit()
         self.progress = QProgressBar()
-        download = QPushButton()
+        download = QPushButton("Download")
+        browse = QPushButton("Browse")
 
         self.url.setPlaceholderText("URL")
         self.save_location.setPlaceholderText("File save location")
@@ -23,6 +24,7 @@ class Downloader(QDialog):
 
         layout.addWidget(self.url)
         layout.addWidget(self.save_location)
+        layout.addWidget(browse)
         layout.addWidget(self.progress)
         layout.addWidget(download)
 
@@ -32,6 +34,13 @@ class Downloader(QDialog):
         self.setFocus()
 
         download.clicked.connect(self.download)
+        browse.clicked.connect(self.browse_file)
+
+    def browse_file(self):
+        save_file = QFileDialog.getSaveFileName(self, caption="Save File as", directory=".",
+                                                filter="All Files (*.*)")
+        self.save_location.setText(save_file)
+
 
     def download(self):
         url = self.url.text()
@@ -41,7 +50,7 @@ class Downloader(QDialog):
             urllib.request.url.urlretrieve(url, save_location, self.report)
         except Exception:
             QMessageBox.warning(self,"Warning", "The download failed")
-            return 
+            return
 
 
 
