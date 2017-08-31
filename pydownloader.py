@@ -27,7 +27,7 @@ class Downloader(QDialog):
         layout.addWidget(download)
 
         self.setLayout(layout)
-        
+
         self.setWindowTitle("PyDownloader")
         self.setFocus()
 
@@ -36,7 +36,19 @@ class Downloader(QDialog):
     def download(self):
         url = self.url.text()
         save_location = self.save_location.text()
-        urllib.request.url.urlretrieve(url, save_location, self.report)
+
+        try:
+            urllib.request.url.urlretrieve(url, save_location, self.report)
+        except Exception:
+            QMessageBox.warning(self,"Warning", "The download failed")
+            return 
+
+
+
+            QMessageBox.information(self, "Information", "The download is complete.")
+        self.progress.setValue(0)
+        self.url.setText("")
+        self.save_location.setText("")
 
     def report(self, blocknum, blocksize, totalsize):
         readsofar = blocknum * blocksize
